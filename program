@@ -1,0 +1,95 @@
+import java.util.Scanner;
+
+public class Bdam {
+	
+	public static void main(String args[]){
+		
+		Scanner input = new Scanner(System.in);
+		
+		System.out.println("Input guess");
+		String guess = input.nextLine();
+		
+		System.out.println("input actual word");
+		String actual = input.nextLine();
+		
+		int x = editDistance(guess,actual); //Real Algorithm Something code
+		System.out.println(x);
+		
+		String s = eDist(guess,actual); //My Code!!
+		System.out.println(s);
+	}
+	
+	public static int editDistance(String x, String y){
+		
+		x= x.toLowerCase();
+		y = y.toLowerCase();
+
+		if(x.isEmpty())
+			return y.length();
+		if(y.isEmpty())
+			return x.length();
+		
+		int xLen = x.length();
+		int yLen = y.length();
+		
+		int[][] eDis = new int[xLen+1][yLen+1];
+		
+		for(int i = 0; i<xLen;i++){
+			char c1 = x.charAt(i);
+			for(int j = 0; j< yLen; j++){
+				char c2 = y.charAt(j);
+				
+				if(c1 == c2)
+					eDis[i+1][j+1]=eDis[i][j];
+				else{
+					int replace = eDis[i][j] + 1;
+					int insert = eDis[i][j + 1] + 1;
+					int delete = eDis[i + 1][j] + 1;
+	 
+					int min = replace > insert ? insert : replace;
+					min = delete > min ? min : delete;
+					eDis[i + 1][j + 1] = min;
+				}
+				
+			}
+			
+			
+			
+		}
+		
+		return eDis[xLen][yLen];
+	}
+	
+	public static String eDist(String x, String y){
+		int count = 0;
+		int errorMarg = y.length()-2;
+		String sub;
+		int xLen = x.length();
+		int yLen = y.length();
+			if(x.isEmpty())
+			count = y.length();
+		if(y.isEmpty())
+			count =  x.length();
+		String swap = y;
+		
+		if(xLen>yLen){
+			y=x;
+			x=swap;
+			sub = y.substring(0,x.length());
+		}
+		count =Math.abs(yLen-xLen);
+		sub = y;
+		for(int i = 0; i<x.length();i++){
+			if(x.charAt(i)!=sub.charAt(i))
+				count++;
+		}
+		if(count<=errorMarg){
+			x=y;
+			return swap+" "+ count;
+		}
+		return("Lmao no match");
+	}
+	
+	
+	
+}
